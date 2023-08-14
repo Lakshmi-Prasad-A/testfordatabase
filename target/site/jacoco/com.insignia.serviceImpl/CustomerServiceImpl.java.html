@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CustomerManagementService</a> &gt; <a href="index.source.html" class="el_package">com.insignia.serviceImpl</a> &gt; <span class="el_source">CustomerServiceImpl.java</span></div><h1>CustomerServiceImpl.java</h1><pre class="source lang-java linenums">package com.insignia.serviceImpl;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Service;
+
+import com.insignia.constants.AddressDetailsConstants;
+import com.insignia.customExceptions.InvalidInputParametersException;
+import com.insignia.customExceptions.TokenExpiredException;
+import com.insignia.daoInterface.CustomerDaoInterface;
+import com.insignia.encryption.PasswordEncoder;
+import com.insignia.entity.AddressDetails;
+import com.insignia.entity.CustomerBasicDetailsEntity;
+import com.insignia.entity.CustomerPersonalDetails;
+import com.insignia.entity.RolesAndPermissions;
+import com.insignia.model.AddressRequest;
+import com.insignia.model.AddressResponse;
+import com.insignia.model.CustomerBasicDetailsRequest;
+import com.insignia.model.CustomerManagementServiceRequest;
+import com.insignia.model.CustomerManagementServiceResponse;
+import com.insignia.model.CustomerPersonalDetailsRequest;
+import com.insignia.model.CustomerPersonalDetailsResponse;
+import com.insignia.model.RolesAndPermissionsRequest;
+import com.insignia.model.RolesAndPermissionsResponse;
+import com.insignia.serviceInterface.CustomerServiceInterface;
+
+@Service
+<span class="fc" id="L39">public class CustomerServiceImpl implements CustomerServiceInterface {</span>
+
+	@Autowired
+	private CustomerDaoInterface customerDao;
+
+	@Transactional(rollbackOn = InvalidInputParametersException.class)
+	@Modifying
+	@Override
+	public CustomerManagementServiceResponse saveAllCustomerDetails(
+			CustomerManagementServiceRequest customerManagementServiceDetails)
+			throws InvalidInputParametersException, InvalidKeyException, NoSuchAlgorithmException,
+			NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+		
+<span class="fc" id="L52">		CustomerBasicDetailsEntity cbde = new CustomerBasicDetailsEntity();</span>
+		
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if (customerManagementServiceDetails.getCustomerBasicDetailsRequest() != null) {</span>
+
+<span class="fc" id="L56">			String password = PasswordEncoder.getEncryptedPassword(</span>
+<span class="fc" id="L57">					customerManagementServiceDetails.getCustomerBasicDetailsRequest().getPassword());</span>
+
+<span class="fc" id="L59">			CustomerBasicDetailsRequest request = customerManagementServiceDetails.getCustomerBasicDetailsRequest();</span>
+
+<span class="fc" id="L61">			cbde = new CustomerBasicDetailsEntity(request.getApplicationId(), request.getTenantId(),</span>
+<span class="fc" id="L62">					request.getUserId(), password, request.getEmailId(), request.getUserName(), null, null, null, null);</span>
+
+		}
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">		if (customerManagementServiceDetails.getRolesAndPermissionsRequestList() != null) {</span>
+
+<span class="fc" id="L67">			List&lt;RolesAndPermissionsRequest&gt; rolesAndPermissionsRequestList = customerManagementServiceDetails</span>
+<span class="fc" id="L68">					.getRolesAndPermissionsRequestList();</span>
+
+<span class="fc" id="L70">			List&lt;RolesAndPermissions&gt; rapList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">			for (RolesAndPermissionsRequest rolesAndPermissionsRequest : rolesAndPermissionsRequestList) {</span>
+<span class="fc" id="L73">				RolesAndPermissions rap = new RolesAndPermissions();</span>
+
+<span class="fc" id="L75">				rap.setRoleName(rolesAndPermissionsRequest.getRoleName());</span>
+<span class="fc" id="L76">				rap.setPermission1(rolesAndPermissionsRequest.getPermission1());</span>
+<span class="fc" id="L77">				rap.setPermission2(rolesAndPermissionsRequest.getPermission2());</span>
+<span class="fc" id="L78">				rap.setPermission3(rolesAndPermissionsRequest.getPermission3());</span>
+<span class="fc" id="L79">				rap.setPermission4(rolesAndPermissionsRequest.getPermission4());</span>
+<span class="fc" id="L80">				rap.setRoleApprovedDate(rolesAndPermissionsRequest.getRoleApprovedDate());</span>
+<span class="fc" id="L81">				rap.setRoleRevokedDate(rolesAndPermissionsRequest.getRoleRevokedDate());</span>
+<span class="fc" id="L82">				rap.setPermissionChangeDate(rolesAndPermissionsRequest.getPermissionChangeDate());</span>
+<span class="fc" id="L83">				rap.setUpdatedPermissions(rolesAndPermissionsRequest.getUpdatedPermissions());</span>
+
+<span class="fc" id="L85">				rapList.add(rap);</span>
+
+<span class="fc" id="L87">			}</span>
+
+<span class="fc" id="L89">			cbde.setRolesAndPermissions(rapList);</span>
+
+		}
+
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">		if (customerManagementServiceDetails.getCustomerPersonalDetailsRequestList() != null) {</span>
+<span class="fc" id="L94">			List&lt;CustomerPersonalDetailsRequest&gt; customerPersonalDetailsRequestList2 = customerManagementServiceDetails</span>
+<span class="fc" id="L95">					.getCustomerPersonalDetailsRequestList();</span>
+<span class="fc" id="L96">			List&lt;CustomerPersonalDetails&gt; cpdList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L98" title="All 2 branches covered.">			for (CustomerPersonalDetailsRequest customerPersonalDetailsRequest : customerPersonalDetailsRequestList2) {</span>
+<span class="fc" id="L99">				CustomerPersonalDetails cpde = new CustomerPersonalDetails();</span>
+<span class="fc" id="L100">				cpde.setFirstName(customerPersonalDetailsRequest.getFirstName());</span>
+<span class="fc" id="L101">				cpde.setLastName(customerPersonalDetailsRequest.getLastName());</span>
+<span class="fc" id="L102">				cpde.setMiddleName(customerPersonalDetailsRequest.getMiddleName());</span>
+<span class="fc" id="L103">				cpde.setAge(customerPersonalDetailsRequest.getAge());</span>
+<span class="fc" id="L104">				cpde.setGender(customerPersonalDetailsRequest.getGender());</span>
+<span class="fc" id="L105">				cpde.setCustomerEmailId(customerPersonalDetailsRequest.getCustomerEmailId());</span>
+<span class="fc" id="L106">				cpde.setAlternativeEmailId(customerPersonalDetailsRequest.getAlternativeEmailId());</span>
+<span class="fc" id="L107">				cpde.setCustomerMobileNumber(customerPersonalDetailsRequest.getCustomerMobileNumber());</span>
+<span class="fc" id="L108">				cpde.setAlternativeMobileNumber(customerPersonalDetailsRequest.getAlternativeMobileNumber());</span>
+<span class="fc" id="L109">				cpde.setCustomerLandlineNumber(customerPersonalDetailsRequest.getCustomerLandlineNumber());</span>
+<span class="fc" id="L110">				cpdList.add(cpde);</span>
+
+<span class="fc" id="L112">			}</span>
+<span class="fc" id="L113">			cbde.setCustomerPersonalDetails(cpdList);</span>
+		}
+
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">		if (customerManagementServiceDetails.getAddressRequestList() != null) {</span>
+<span class="fc" id="L117">			List&lt;AddressRequest&gt; addressRequestList = customerManagementServiceDetails.getAddressRequestList();</span>
+<span class="fc" id="L118">			List&lt;AddressDetails&gt; adList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L120" title="All 2 branches covered.">			for (AddressRequest addressRequest : addressRequestList) {</span>
+<span class="fc" id="L121">				AddressDetails ad = new AddressDetails();</span>
+<span class="fc" id="L122">				ad.setAddressLine1(addressRequest.getAddressLine1());</span>
+<span class="fc" id="L123">				ad.setAddressLine2(addressRequest.getAddressLine2());</span>
+<span class="fc" id="L124">				ad.setLandmark(addressRequest.getLandmark());</span>
+<span class="fc" id="L125">				ad.setCity(addressRequest.getCity());</span>
+<span class="fc" id="L126">				ad.setState(addressRequest.getState());</span>
+<span class="fc" id="L127">				ad.setCountry(addressRequest.getCountry());</span>
+<span class="fc" id="L128">				ad.setZipCode(addressRequest.getZipCode());</span>
+<span class="fc" id="L129">				ad.setMobileNumber(addressRequest.getMobileNumber());</span>
+<span class="fc" id="L130">				ad.setLandlineNumber(addressRequest.getLandlineNumber());</span>
+<span class="fc" id="L131">				ad.setEmailId(addressRequest.getEmailId());</span>
+<span class="fc" id="L132">				ad.setDefaultAddress(addressRequest.getIsDefaultAddress());</span>
+<span class="fc" id="L133">				ad.setBillingAddress(addressRequest.getIsBillingAddress());</span>
+
+<span class="fc" id="L135">				adList.add(ad);</span>
+
+<span class="fc" id="L137">			}</span>
+
+<span class="fc" id="L139">			cbde.setAddressDetails(adList);</span>
+
+		}
+
+<span class="fc" id="L143">		CustomerBasicDetailsEntity customerBasicDetails = customerDao.saveAllCustomerDetails(cbde);</span>
+
+<span class="fc" id="L145">		return createResponse(customerBasicDetails);</span>
+
+	}
+
+	public Optional&lt;CustomerManagementServiceResponse&gt; getAllCustomerData(Long customerSequenceNumber)
+			throws TokenExpiredException, InvalidInputParametersException {
+		
+<span class="fc" id="L152">		CustomerBasicDetailsEntity customerBasicDetailsEntity = getCustomerData(customerSequenceNumber);</span>
+
+<span class="fc" id="L154">		CustomerManagementServiceResponse customerManagementServiceResponse = new CustomerManagementServiceResponse();</span>
+
+<span class="fc" id="L156">		customerManagementServiceResponse.setAddressResponseList(</span>
+<span class="fc" id="L157">				createAddressDetailsResponseForEntity(customerBasicDetailsEntity.getAddressDetails()));</span>
+
+<span class="fc" id="L159">		customerManagementServiceResponse.setRolesAndPermissionsResponseList(</span>
+<span class="fc" id="L160">				createRolesAndPermissionsResponseForEntity(customerBasicDetailsEntity.getRolesAndPermissions()));</span>
+
+<span class="fc" id="L162">		customerManagementServiceResponse</span>
+<span class="fc" id="L163">				.setCustomerPersonalDetailsResponseList(createCustomerPersonalDetailsResponseForEntity(</span>
+<span class="fc" id="L164">						customerBasicDetailsEntity.getCustomerPersonalDetails()));</span>
+
+<span class="fc" id="L166">		return Optional.ofNullable(customerManagementServiceResponse);</span>
+
+	}
+
+	private CustomerBasicDetailsEntity getCustomerData(Long customerSequenceNumber) throws TokenExpiredException {
+<span class="fc bfc" id="L171" title="All 2 branches covered.">		if (isTokenNotValid(customerSequenceNumber))</span>
+<span class="fc" id="L172">			throw new TokenExpiredException(AddressDetailsConstants.validateTokenErrorCode,</span>
+					AddressDetailsConstants.validateToken);
+
+<span class="fc" id="L175">		Optional&lt;CustomerBasicDetailsEntity&gt; customerData = customerDao.getAllCustomerData(customerSequenceNumber);</span>
+
+<span class="fc" id="L177">		CustomerBasicDetailsEntity customerBasicDetailsEntity = customerData.get();</span>
+<span class="fc" id="L178">		return customerBasicDetailsEntity;</span>
+	}
+
+	@Override
+	public void deleteCustomerAssociatedDetails(Long customerSequenceNumber) throws TokenExpiredException {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">		if (isTokenNotValid(customerSequenceNumber))</span>
+<span class="fc" id="L184">			throw new TokenExpiredException(AddressDetailsConstants.validateTokenErrorCode,</span>
+					AddressDetailsConstants.validateToken);
+
+<span class="fc" id="L187">		customerDao.deleteCustomerAssociatedDetails(customerSequenceNumber);</span>
+
+<span class="fc" id="L189">	}</span>
+
+	
+
+	@Transactional(rollbackOn = InvalidInputParametersException.class)
+	@Override
+	public CustomerManagementServiceResponse updateAllCustomerDetails(
+			CustomerManagementServiceRequest customerManagementServiceRequest)
+			throws TokenExpiredException, InvalidInputParametersException {
+
+<span class="fc" id="L199">		CustomerBasicDetailsEntity customerBasicDetailsEntity = getCustomerData(</span>
+<span class="fc" id="L200">				customerManagementServiceRequest.getCustomerBasicDetailsRequest().getCustomerSequenceNumber());</span>
+
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">		if (customerManagementServiceRequest.getAddressRequestList() != null) {</span>
+
+<span class="fc" id="L204">			List&lt;AddressRequest&gt; addressRequestList = customerManagementServiceRequest.getAddressRequestList();</span>
+
+<span class="fc bfc" id="L206" title="All 2 branches covered.">			for (AddressRequest addressRequest : addressRequestList) {</span>
+
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">				for (AddressDetails addressDetails : customerBasicDetailsEntity.getAddressDetails()) {</span>
+
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">					if (addressRequest.getSequenceNumber() == addressDetails.getSequenceNumber()) {</span>
+
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">						if (addressRequest.isAddressLine1Updated()) {</span>
+<span class="fc" id="L213">							addressDetails.setAddressLine1(addressRequest.getAddressLine1());</span>
+						}
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">						if (addressRequest.isAddressLine2Updated()) {</span>
+<span class="fc" id="L216">							addressDetails.setAddressLine2(addressRequest.getAddressLine2());</span>
+						}
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">						if (addressRequest.isLandMarkUpdated()) {</span>
+<span class="fc" id="L219">							addressDetails.setLandmark(addressRequest.getLandmark());</span>
+						}
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">						if (addressRequest.isCityUpdated()) {</span>
+<span class="fc" id="L222">							addressDetails.setCity(addressRequest.getCity());</span>
+						}
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">						if (addressRequest.isStateUpdated()) {</span>
+<span class="fc" id="L225">							addressDetails.setState(addressRequest.getState());</span>
+						}
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">						if (addressRequest.isCountryUpdated()) {</span>
+<span class="fc" id="L228">							addressDetails.setCountry(addressRequest.getCountry());</span>
+						}
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">						if (addressRequest.isZipCodeUpdated()) {</span>
+<span class="fc" id="L231">							addressDetails.setZipCode(addressRequest.getZipCode());</span>
+						}
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">						if (addressRequest.isMobileNumberUpdated()) {</span>
+<span class="fc" id="L234">							addressDetails.setMobileNumber(addressRequest.getMobileNumber());</span>
+						}
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">						if (addressRequest.isLandLineNumberUpdated()) {</span>
+<span class="fc" id="L237">							addressDetails.setLandlineNumber(addressRequest.getLandlineNumber());</span>
+						}
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">						if (addressRequest.isEmailAddressUpdated()) {</span>
+<span class="fc" id="L240">							addressDetails.setEmailId(addressRequest.getEmailId());</span>
+						}
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">						if (addressRequest.isDefaultAddressUpdated()) {</span>
+<span class="fc" id="L243">							addressDetails.setDefaultAddress(addressRequest.getIsDefaultAddress());</span>
+						}
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">						if (addressRequest.isBillingAddressUpdated()) {</span>
+<span class="fc" id="L246">							addressDetails.setBillingAddress(addressRequest.getIsBillingAddress());</span>
+						}
+
+						break;
+					}
+
+<span class="nc" id="L252">				}</span>
+
+<span class="fc" id="L254">			}</span>
+		}
+
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">		if (customerManagementServiceRequest.getRolesAndPermissionsRequestList() != null) {</span>
+
+<span class="fc" id="L259">			List&lt;RolesAndPermissionsRequest&gt; rolesAndPermissionsRequestList = customerManagementServiceRequest</span>
+<span class="fc" id="L260">					.getRolesAndPermissionsRequestList();</span>
+
+<span class="fc bfc" id="L262" title="All 2 branches covered.">			for (RolesAndPermissionsRequest rolesAndPermissionsRequest : rolesAndPermissionsRequestList) {</span>
+
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">				for (RolesAndPermissions rolesAndPermissions : customerBasicDetailsEntity.getRolesAndPermissions()) {</span>
+
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">					if (rolesAndPermissionsRequest.getRoleId() == rolesAndPermissions.getRoleId()) {</span>
+
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isRoleNameUpdated()) {</span>
+<span class="fc" id="L269">							rolesAndPermissions.setRoleName(rolesAndPermissionsRequest.getRoleName());</span>
+						}
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isPermission1Updated()) {</span>
+<span class="fc" id="L272">							rolesAndPermissions.setPermission1(rolesAndPermissionsRequest.getPermission1());</span>
+						}
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isPermission2Updated()) {</span>
+<span class="fc" id="L275">							rolesAndPermissions.setPermission2(rolesAndPermissionsRequest.getPermission2());</span>
+						}
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isPermission3Updated()) {</span>
+<span class="fc" id="L278">							rolesAndPermissions.setPermission3(rolesAndPermissionsRequest.getPermission3());</span>
+						}
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isPermission4Updated()) {</span>
+<span class="fc" id="L281">							rolesAndPermissions.setPermission4(rolesAndPermissionsRequest.getPermission4());</span>
+						}
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isRoleApprovedDateUpdated()) {</span>
+<span class="fc" id="L284">							rolesAndPermissions.setRoleApprovedDate(rolesAndPermissionsRequest.getRoleApprovedDate());</span>
+						}
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isRoleRevokedDateUpdated()) {</span>
+<span class="fc" id="L287">							rolesAndPermissions.setRoleRevokedDate(rolesAndPermissionsRequest.getRoleRevokedDate());</span>
+						}
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isPermissionChangeDateUpdated()) {</span>
+<span class="fc" id="L290">							rolesAndPermissions</span>
+<span class="fc" id="L291">									.setPermissionChangeDate(rolesAndPermissionsRequest.getPermissionChangeDate());</span>
+						}
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">						if (rolesAndPermissionsRequest.isUpdatedPermissionsUpdated()) {</span>
+<span class="fc" id="L294">							rolesAndPermissions</span>
+<span class="fc" id="L295">									.setUpdatedPermissions(rolesAndPermissionsRequest.getUpdatedPermissions());</span>
+						}
+						break;
+					}
+
+<span class="nc" id="L300">				}</span>
+
+<span class="fc" id="L302">			}</span>
+		}
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">		if (customerManagementServiceRequest.getCustomerPersonalDetailsRequestList() != null) {</span>
+
+<span class="fc" id="L306">			List&lt;CustomerPersonalDetailsRequest&gt; customerPersonalDetailsRequestList = customerManagementServiceRequest</span>
+<span class="fc" id="L307">					.getCustomerPersonalDetailsRequestList();</span>
+
+<span class="fc bfc" id="L309" title="All 2 branches covered.">			for (CustomerPersonalDetailsRequest customerPersonalDetailsRequest : customerPersonalDetailsRequestList) {</span>
+
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">				for (CustomerPersonalDetails customerPersonalDetails : customerBasicDetailsEntity</span>
+<span class="fc" id="L312">						.getCustomerPersonalDetails()) {</span>
+
+<span class="fc" id="L314">					if (customerPersonalDetailsRequest.getSequenceNumber() == customerPersonalDetails</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">							.getSequenceNumber()) {</span>
+
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isFirstNameUpdated()) {</span>
+<span class="fc" id="L318">							customerPersonalDetails.setFirstName(customerPersonalDetailsRequest.getFirstName());</span>
+						}
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isLastNameUpdated()) {</span>
+<span class="fc" id="L321">							customerPersonalDetails.setLastName(customerPersonalDetailsRequest.getLastName());</span>
+						}
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isMiddleNameUpdated()) {</span>
+<span class="fc" id="L324">							customerPersonalDetails.setMiddleName(customerPersonalDetailsRequest.getMiddleName());</span>
+						}
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isAgeUpdated()) {</span>
+<span class="fc" id="L327">							customerPersonalDetails.setAge(customerPersonalDetailsRequest.getAge());</span>
+						}
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isGenderUpdated()) {</span>
+<span class="fc" id="L330">							customerPersonalDetails.setGender(customerPersonalDetailsRequest.getGender());</span>
+						}
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isCustomerEmailIdUpdated()) {</span>
+<span class="fc" id="L333">							customerPersonalDetails</span>
+<span class="fc" id="L334">									.setCustomerEmailId(customerPersonalDetailsRequest.getCustomerEmailId());</span>
+						}
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isAlternativeEmailIdUpdated()) {</span>
+<span class="fc" id="L337">							customerPersonalDetails</span>
+<span class="fc" id="L338">									.setAlternativeEmailId(customerPersonalDetailsRequest.getAlternativeEmailId());</span>
+						}
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isCustomerMobileNumberUpdated()) {</span>
+<span class="fc" id="L341">							customerPersonalDetails</span>
+<span class="fc" id="L342">									.setCustomerMobileNumber(customerPersonalDetailsRequest.getCustomerMobileNumber());</span>
+						}
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isAlternativeMobileNumberUpdated()) {</span>
+<span class="fc" id="L345">							customerPersonalDetails.setAlternativeMobileNumber(</span>
+<span class="fc" id="L346">									customerPersonalDetailsRequest.getAlternativeMobileNumber());</span>
+						}
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">						if (customerPersonalDetailsRequest.isCustomerLandlineUpdated()) {</span>
+<span class="fc" id="L349">							customerPersonalDetails.setCustomerLandlineNumber(</span>
+<span class="fc" id="L350">									customerPersonalDetailsRequest.getCustomerLandlineNumber());</span>
+						}
+						break;
+					}
+
+<span class="nc" id="L355">				}</span>
+
+<span class="fc" id="L357">			}</span>
+		}
+
+<span class="fc" id="L360">		CustomerBasicDetailsEntity customerBasicDetail = customerDao</span>
+<span class="fc" id="L361">				.updateAllCustomerDetails(customerBasicDetailsEntity);</span>
+		
+<span class="fc" id="L363">		return createResponse(customerBasicDetail);</span>
+	}
+
+	private CustomerManagementServiceResponse createResponse(CustomerBasicDetailsEntity customerBasicDetailsEntity) {
+
+<span class="fc" id="L368">		CustomerManagementServiceResponse customerManagementServiceResponse = new CustomerManagementServiceResponse();</span>
+
+<span class="fc" id="L370">		customerManagementServiceResponse.setSuccessMessage(&quot;Successfully saved data&quot;);</span>
+
+		// AddressResponse//
+<span class="pc bpc" id="L373" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null &amp;&amp; customerBasicDetailsEntity.getAddressDetails()!=null&amp;&amp;!customerBasicDetailsEntity.getAddressDetails().isEmpty())</span>
+<span class="nc" id="L374">			customerManagementServiceResponse.setAddressResponseList(</span>
+<span class="nc" id="L375">					createAddressDetailsResponseForEntity(customerBasicDetailsEntity.getAddressDetails()));</span>
+
+		// CustomerPersonalDetailsResponse//
+<span class="pc bpc" id="L378" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getCustomerPersonalDetails()!=null &amp;&amp; !customerBasicDetailsEntity.getCustomerPersonalDetails().isEmpty())</span>
+<span class="nc" id="L379">			customerManagementServiceResponse</span>
+<span class="nc" id="L380">					.setCustomerPersonalDetailsResponseList(createCustomerPersonalDetailsResponseForEntity(</span>
+<span class="nc" id="L381">							customerBasicDetailsEntity.getCustomerPersonalDetails()));</span>
+
+<span class="pc bpc" id="L383" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getRolesAndPermissions()!=null &amp;&amp; !customerBasicDetailsEntity.getRolesAndPermissions().isEmpty())</span>
+<span class="nc" id="L384">			customerManagementServiceResponse.setRolesAndPermissionsResponseList(</span>
+<span class="nc" id="L385">					createRolesAndPermissionsResponseForEntity(customerBasicDetailsEntity.getRolesAndPermissions()));</span>
+
+<span class="fc" id="L387">		return customerManagementServiceResponse;</span>
+	}
+
+	private List&lt;RolesAndPermissionsResponse&gt; createRolesAndPermissionsResponseForEntity(
+			List&lt;RolesAndPermissions&gt; rolesAndPermissions) {
+
+<span class="fc" id="L393">		List&lt;RolesAndPermissionsResponse&gt; rolesAndPermissionsResponseList = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">		for (RolesAndPermissions rolesAndPermissionsList : rolesAndPermissions) {</span>
+
+<span class="nc" id="L397">			RolesAndPermissionsResponse rolesAndPermissionsResponse = new RolesAndPermissionsResponse();</span>
+
+<span class="nc" id="L399">			rolesAndPermissionsResponse.setRoleId(rolesAndPermissionsList.getRoleId());</span>
+<span class="nc" id="L400">			rolesAndPermissionsResponse.setRoleName(rolesAndPermissionsList.getRoleName());</span>
+<span class="nc" id="L401">			rolesAndPermissionsResponse.setPermission1(rolesAndPermissionsList.getPermission1());</span>
+<span class="nc" id="L402">			rolesAndPermissionsResponse.setPermission2(rolesAndPermissionsList.getPermission2());</span>
+<span class="nc" id="L403">			rolesAndPermissionsResponse.setPermission3(rolesAndPermissionsList.getPermission3());</span>
+<span class="nc" id="L404">			rolesAndPermissionsResponse.setPermission4(rolesAndPermissionsList.getPermission4());</span>
+<span class="nc" id="L405">			rolesAndPermissionsResponse.setRoleApprovedDate(rolesAndPermissionsList.getRoleApprovedDate());</span>
+<span class="nc" id="L406">			rolesAndPermissionsResponse.setRoleRevokedDate(rolesAndPermissionsList.getRoleRevokedDate());</span>
+<span class="nc" id="L407">			rolesAndPermissionsResponse.setPermissionChangeDate(rolesAndPermissionsList.getPermissionChangeDate());</span>
+<span class="nc" id="L408">			rolesAndPermissionsResponse.setUpdatedPermissions(rolesAndPermissionsList.getUpdatedPermissions());</span>
+
+<span class="nc" id="L410">			rolesAndPermissionsResponseList.add(rolesAndPermissionsResponse);</span>
+<span class="nc" id="L411">		}</span>
+<span class="fc" id="L412">		return rolesAndPermissionsResponseList;</span>
+	}
+
+	private List&lt;CustomerPersonalDetailsResponse&gt; createCustomerPersonalDetailsResponseForEntity(
+			List&lt;CustomerPersonalDetails&gt; customerPersonalDetails) {
+<span class="fc" id="L417">		List&lt;CustomerPersonalDetailsResponse&gt; customerPersonalDetailsResponseList = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">		for (CustomerPersonalDetails customerPersonalDetailsList : customerPersonalDetails) {</span>
+
+<span class="nc" id="L421">			CustomerPersonalDetailsResponse customerPersonalDetailsResponse = new CustomerPersonalDetailsResponse();</span>
+
+<span class="nc" id="L423">			customerPersonalDetailsResponse.setSequenceNumber(customerPersonalDetailsList.getSequenceNumber());</span>
+<span class="nc" id="L424">			customerPersonalDetailsResponse.setFirstName(customerPersonalDetailsList.getFirstName());</span>
+<span class="nc" id="L425">			customerPersonalDetailsResponse.setLastName(customerPersonalDetailsList.getLastName());</span>
+<span class="nc" id="L426">			customerPersonalDetailsResponse.setMiddleName(customerPersonalDetailsList.getMiddleName());</span>
+<span class="nc" id="L427">			customerPersonalDetailsResponse.setAge(customerPersonalDetailsList.getAge());</span>
+<span class="nc" id="L428">			customerPersonalDetailsResponse.setGender(customerPersonalDetailsList.getGender());</span>
+<span class="nc" id="L429">			customerPersonalDetailsResponse.setCustomerEmailId(customerPersonalDetailsList.getCustomerEmailId());</span>
+<span class="nc" id="L430">			customerPersonalDetailsResponse.setAlternativeEmailId(customerPersonalDetailsList.getAlternativeEmailId());</span>
+<span class="nc" id="L431">			customerPersonalDetailsResponse</span>
+<span class="nc" id="L432">					.setCustomerMobileNumber(customerPersonalDetailsList.getCustomerMobileNumber());</span>
+<span class="nc" id="L433">			customerPersonalDetailsResponse</span>
+<span class="nc" id="L434">					.setAlternativeMobileNumber(customerPersonalDetailsList.getAlternativeMobileNumber());</span>
+<span class="nc" id="L435">			customerPersonalDetailsResponse</span>
+<span class="nc" id="L436">					.setCustomerLandlineNumber(customerPersonalDetailsList.getCustomerLandlineNumber());</span>
+
+<span class="nc" id="L438">			customerPersonalDetailsResponseList.add(customerPersonalDetailsResponse);</span>
+<span class="nc" id="L439">		}</span>
+<span class="fc" id="L440">		return customerPersonalDetailsResponseList;</span>
+
+	}
+
+	private List&lt;AddressResponse&gt; createAddressDetailsResponseForEntity(List&lt;AddressDetails&gt; addressDetailsList) {
+<span class="fc" id="L445">		List&lt;AddressResponse&gt; addressResponseList = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L447" title="1 of 2 branches missed.">		for (AddressDetails addressDetails : addressDetailsList) {</span>
+
+<span class="nc" id="L449">			AddressResponse addressResponse = new AddressResponse();</span>
+
+<span class="nc" id="L451">			addressResponse.setSequenceNumber(addressDetails.getSequenceNumber());</span>
+<span class="nc" id="L452">			addressResponse.setAddressLine1(addressDetails.getAddressLine1());</span>
+<span class="nc" id="L453">			addressResponse.setAddressLine2(addressDetails.getAddressLine2());</span>
+<span class="nc" id="L454">			addressResponse.setLandmark(addressDetails.getLandmark());</span>
+<span class="nc" id="L455">			addressResponse.setCity(addressDetails.getCity());</span>
+<span class="nc" id="L456">			addressResponse.setState(addressDetails.getState());</span>
+<span class="nc" id="L457">			addressResponse.setCountry(addressDetails.getCountry());</span>
+<span class="nc" id="L458">			addressResponse.setZipCode(addressDetails.getZipCode());</span>
+<span class="nc" id="L459">			addressResponse.setMobileNumber(addressDetails.getMobileNumber());</span>
+<span class="nc" id="L460">			addressResponse.setLandlineNumber(addressDetails.getLandlineNumber());</span>
+<span class="nc" id="L461">			addressResponse.setEmailId(addressDetails.getEmailId());</span>
+
+<span class="nc" id="L463">			addressResponseList.add(addressResponse);</span>
+<span class="nc" id="L464">		}</span>
+
+<span class="fc" id="L466">		return addressResponseList;</span>
+	}
+	
+	private Boolean isTokenNotValid(Long customer_sequence_number) {
+<span class="fc" id="L470">		return customerDao.isTokenNotValid(customer_sequence_number);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

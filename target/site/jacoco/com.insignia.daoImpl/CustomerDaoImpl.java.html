@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CustomerManagementService</a> &gt; <a href="index.source.html" class="el_package">com.insignia.daoImpl</a> &gt; <span class="el_source">CustomerDaoImpl.java</span></div><h1>CustomerDaoImpl.java</h1><pre class="source lang-java linenums">package com.insignia.daoImpl;
+
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Repository;
+
+import com.insignia.constants.CustomerBasicDetailsConstants;
+import com.insignia.customExceptions.InvalidInputParametersException;
+import com.insignia.daoInterface.CustomerDaoInterface;
+import com.insignia.entity.CustomerBasicDetailsEntity;
+import com.insignia.repo.CustomerBasicDetailsRepository;
+
+@Repository
+public class CustomerDaoImpl implements CustomerDaoInterface {
+
+	@Autowired
+	private CustomerBasicDetailsRepository customerBasicDetailsRepo;
+
+	@Autowired
+	private EntityManager entityManager;
+
+	public CustomerDaoImpl(CustomerBasicDetailsRepository customerBasicDetailsRepo, EntityManager entityManager) {
+<span class="fc" id="L29">		super();</span>
+<span class="fc" id="L30">		this.customerBasicDetailsRepo = customerBasicDetailsRepo;</span>
+<span class="fc" id="L31">		this.entityManager = entityManager;</span>
+
+<span class="fc" id="L33">	}</span>
+
+	@Override
+	public CustomerBasicDetailsEntity saveAllCustomerDetails(CustomerBasicDetailsEntity cbde)
+			throws InvalidInputParametersException {
+		try {
+
+<span class="fc" id="L40">			return customerBasicDetailsRepo.save(cbde);</span>
+
+<span class="fc" id="L42">		} catch (DataIntegrityViolationException e) {</span>
+<span class="fc" id="L43">			throw new InvalidInputParametersException(CustomerBasicDetailsConstants.validateCustomerDetailsErrorCode,</span>
+					CustomerBasicDetailsConstants.validateCustomerDetailsMessage);
+		}
+
+	}
+
+	@Override
+	public CustomerBasicDetailsEntity updateAllCustomerDetails(CustomerBasicDetailsEntity customerBasicDetailsEntity)
+			throws InvalidInputParametersException {
+		try {
+<span class="fc" id="L53">			return entityManager.merge(customerBasicDetailsEntity);</span>
+
+<span class="fc" id="L55">		} catch (Exception e) {</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">			if (e.getCause() instanceof ConstraintViolationException) {</span>
+<span class="nc" id="L57">				throw new InvalidInputParametersException(</span>
+						CustomerBasicDetailsConstants.validateCustomerDetailsErrorCode,
+						CustomerBasicDetailsConstants.validateCustomerDetailsMessage);
+			}
+<span class="fc" id="L61">			throw e;</span>
+		}
+	}
+
+	@Transactional
+	@Override
+	public void deleteCustomerAssociatedDetails(Long customerSequenceNumber) {
+<span class="fc" id="L68">		customerBasicDetailsRepo.deleteById(customerSequenceNumber);</span>
+
+<span class="fc" id="L70">	}</span>
+
+	@Override
+	public Optional&lt;CustomerBasicDetailsEntity&gt; getAllCustomerData(Long customerSequenceNumber) {
+<span class="fc" id="L74">		return customerBasicDetailsRepo.findById(customerSequenceNumber);</span>
+
+	}
+
+	@Override
+	public Boolean isTokenNotValid(Long customer_sequence_number) {
+<span class="fc" id="L80">		return customerBasicDetailsRepo.isTokenNotValid(customer_sequence_number).isEmpty();</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,27 @@
+package com.insignia.serviceInterface;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import com.insignia.customExceptions.InvalidInputParametersException;
+import com.insignia.customExceptions.TokenExpiredException;
+import com.insignia.model.CustomerManagementServiceRequest;
+import com.insignia.model.CustomerManagementServiceResponse;
+
+public interface CustomerServiceInterface {
+
+	public CustomerManagementServiceResponse saveAllCustomerDetails(CustomerManagementServiceRequest customerManagementServiceDetails) throws InvalidInputParametersException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+
+	public void deleteCustomerAssociatedDetails(Long customerSequenceNumber) throws TokenExpiredException;
+	
+	public Optional<CustomerManagementServiceResponse> getAllCustomerData(Long customerSequenceNumber) throws TokenExpiredException, InvalidInputParametersException;
+	
+	public CustomerManagementServiceResponse updateAllCustomerDetails(CustomerManagementServiceRequest customerManagementServiceDetails) throws TokenExpiredException, InvalidInputParametersException;
+
+	
+}

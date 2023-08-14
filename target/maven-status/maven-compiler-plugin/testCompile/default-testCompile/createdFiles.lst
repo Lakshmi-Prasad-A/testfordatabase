@@ -1,0 +1,4 @@
+com\insignia\daoImpl\TestCustomerDaoImpl.class
+com\insignia\controller\TestCustomerController.class
+com\insignia\CustomerTestApplicationTests.class
+com\insignia\serviceImpl\TestCustomerServiceImpl.class

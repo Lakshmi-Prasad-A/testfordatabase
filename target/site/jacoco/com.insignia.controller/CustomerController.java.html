@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CustomerManagementService</a> &gt; <a href="index.source.html" class="el_package">com.insignia.controller</a> &gt; <span class="el_source">CustomerController.java</span></div><h1>CustomerController.java</h1><pre class="source lang-java linenums">package com.insignia.controller;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.insignia.constant.CustomerManagementConstants;
+import com.insignia.constants.AddressDetailsConstants;
+import com.insignia.customExceptions.InvalidInputParametersException;
+import com.insignia.customExceptions.TokenExpiredException;
+import com.insignia.entity.CustomerBasicDetailsEntity;
+import com.insignia.model.AddressRequest;
+import com.insignia.model.AddressResponse;
+import com.insignia.model.CustomerManagementServiceRequest;
+import com.insignia.model.CustomerManagementServiceResponse;
+import com.insignia.model.CustomerPersonalDetailsRequest;
+import com.insignia.model.RolesAndPermissionsRequest;
+import com.insignia.serviceInterface.CustomerServiceInterface;
+import com.insignia.validations.AddressDetailsValidation;
+import com.insignia.validations.CustomerBasicDetailsValidation;
+import com.insignia.validations.CustomerPersonalDetailsValidation;
+import com.insignia.validations.RolesAndPermissonsValidations;
+
+@RestController
+<span class="fc" id="L34">public class CustomerController {</span>
+
+	@Autowired
+	private CustomerServiceInterface serviceRepo;
+
+	@PostMapping(&quot;/saveCustomerDetails&quot;)
+	public ResponseEntity&lt;?&gt; saveAllCustomerDetails(
+			@RequestBody CustomerManagementServiceRequest customerManagementDetails) {
+		try {
+			
+<span class="fc" id="L44">			validateCustomerAllDetails(customerManagementDetails);</span>
+
+<span class="fc" id="L46">			return ResponseEntity.ok(serviceRepo.saveAllCustomerDetails(customerManagementDetails));</span>
+
+<span class="fc" id="L48">		} catch (InvalidInputParametersException ex) {</span>
+<span class="fc" id="L49">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L50">					.body(new CustomerManagementServiceResponse(ex.getErrorCode(), ex.getStrMsg()));</span>
+<span class="nc" id="L51">		} catch (Exception e) {</span>
+<span class="nc" id="L52">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L53">					.body(new CustomerManagementServiceResponse(AddressDetailsConstants.validateUnexpectedErrorCode,</span>
+							AddressDetailsConstants.validateUnexpectedErrorMessage));
+		}
+	}
+
+	@PutMapping(&quot;/updateCustomerDetails&quot;)
+	public ResponseEntity&lt;?&gt; updateAllCustomerDetails(
+			@RequestBody CustomerManagementServiceRequest customerManagementDetails) {
+
+		try {
+<span class="fc" id="L63">			validateCustomerAllDetails(customerManagementDetails);</span>
+
+<span class="fc" id="L65">			return ResponseEntity.ok(serviceRepo.updateAllCustomerDetails(customerManagementDetails));</span>
+
+<span class="fc" id="L67">		} catch (InvalidInputParametersException ex) {</span>
+<span class="fc" id="L68">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L69">					.body(new CustomerManagementServiceResponse(ex.getErrorCode(), ex.getStrMsg()));</span>
+<span class="fc" id="L70">		} catch (TokenExpiredException ex) {</span>
+<span class="fc" id="L71">			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AddressResponse(</span>
+					AddressDetailsConstants.validateTokenErrorCode, AddressDetailsConstants.validateToken));
+
+<span class="fc" id="L74">		} catch (Exception e) {</span>
+<span class="fc" id="L75">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L76">					.body(new CustomerManagementServiceResponse(AddressDetailsConstants.validateUnexpectedErrorCode,</span>
+							AddressDetailsConstants.validateUnexpectedErrorMessage));
+		}
+	}
+
+	@DeleteMapping(&quot;/deleteCustomerDetails/{customerSequenceNumber}&quot;)
+	public ResponseEntity&lt;?&gt; deleteCustomerAssociatedDetails(@PathVariable Long customerSequenceNumber) {
+		try {
+<span class="fc" id="L84">			serviceRepo.deleteCustomerAssociatedDetails(customerSequenceNumber);</span>
+<span class="fc" id="L85">			return ResponseEntity.ok(&quot;Record Successfully Deleted&quot;);</span>
+
+<span class="fc" id="L87">		} catch (TokenExpiredException ex) {</span>
+<span class="fc" id="L88">			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AddressResponse(</span>
+					AddressDetailsConstants.validateTokenErrorCode, AddressDetailsConstants.validateToken));
+
+<span class="fc" id="L91">		} catch (Exception e) {</span>
+<span class="fc" id="L92">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L93">					.body(new CustomerManagementServiceResponse(AddressDetailsConstants.validateUnexpectedErrorCode,</span>
+							AddressDetailsConstants.validateUnexpectedErrorMessage));
+		}
+
+	}
+
+	@GetMapping(&quot;/getCustomerDetails/{customerSequenceNumber}&quot;)
+	public ResponseEntity&lt;?&gt; getAllCustomerData(@PathVariable Long customerSequenceNumber) {
+		try {
+<span class="fc" id="L102">			Optional&lt;CustomerManagementServiceResponse&gt; customerDetails = serviceRepo</span>
+<span class="fc" id="L103">					.getAllCustomerData(customerSequenceNumber);</span>
+<span class="fc" id="L104">			return ResponseEntity</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">					.ok(customerDetails.isPresent() ? customerDetails.get() : new CustomerBasicDetailsEntity());</span>
+
+<span class="fc" id="L107">		} catch (TokenExpiredException ex) {</span>
+<span class="fc" id="L108">			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AddressResponse(</span>
+					AddressDetailsConstants.validateTokenErrorCode, AddressDetailsConstants.validateToken));
+
+<span class="fc" id="L111">		} catch (Exception e) {</span>
+<span class="fc" id="L112">			return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L113">					.body(new CustomerManagementServiceResponse(AddressDetailsConstants.validateUnexpectedErrorCode,</span>
+							AddressDetailsConstants.validateUnexpectedErrorMessage));
+		}
+	}
+
+	private void validateCustomerAllDetails(CustomerManagementServiceRequest customerManagementDetails)
+			throws InvalidInputParametersException {
+		
+<span class="fc" id="L121">		validateCustomerBasicDetails(customerManagementDetails);</span>
+
+<span class="fc" id="L123">		validateAddressDetails(customerManagementDetails);</span>
+
+<span class="fc" id="L125">		validateCustomerPersonalDetails(customerManagementDetails);</span>
+
+<span class="fc" id="L127">		validateRolesAndPermissions(customerManagementDetails);</span>
+<span class="fc" id="L128">	}</span>
+
+	private void validateRolesAndPermissions(CustomerManagementServiceRequest customerManagementDetails)
+			throws InvalidInputParametersException {
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">		if (customerManagementDetails.getRolesAndPermissionsRequestList() != null) {</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">			for (RolesAndPermissionsRequest rolesAndPermissionsRequest : customerManagementDetails</span>
+<span class="fc" id="L134">					.getRolesAndPermissionsRequestList()) {</span>
+
+<span class="fc" id="L136">				RolesAndPermissonsValidations.ValidateRoleName(rolesAndPermissionsRequest.getRoleName(),</span>
+<span class="fc" id="L137">						CustomerManagementConstants.roleNameLength);</span>
+<span class="fc" id="L138">				RolesAndPermissonsValidations.ValidateUpdatePermissions(</span>
+<span class="fc" id="L139">						rolesAndPermissionsRequest.getUpdatedPermissions(),</span>
+<span class="fc" id="L140">						CustomerManagementConstants.updatePermissionsLength);</span>
+
+<span class="fc" id="L142">			}</span>
+		}
+<span class="fc" id="L144">	}</span>
+
+	private void validateCustomerPersonalDetails(CustomerManagementServiceRequest customerManagementDetails)
+			throws InvalidInputParametersException {
+		
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">		if (customerManagementDetails.getCustomerPersonalDetailsRequestList() != null) {</span>
+
+<span class="fc bfc" id="L151" title="All 2 branches covered.">			for (CustomerPersonalDetailsRequest customerPersonalRequest : customerManagementDetails</span>
+<span class="fc" id="L152">					.getCustomerPersonalDetailsRequestList()) {</span>
+
+<span class="fc" id="L154">				CustomerPersonalDetailsValidation.ValidateFirstName(customerPersonalRequest.getFirstName(),</span>
+<span class="fc" id="L155">						CustomerManagementConstants.firstNameLength);</span>
+<span class="fc" id="L156">				CustomerPersonalDetailsValidation.ValidateLastName(customerPersonalRequest.getLastName(),</span>
+<span class="fc" id="L157">						CustomerManagementConstants.secondNameLength);</span>
+<span class="fc" id="L158">				CustomerPersonalDetailsValidation.ValidateMiddleName(customerPersonalRequest.getMiddleName(),</span>
+<span class="fc" id="L159">						CustomerManagementConstants.middleNameLength);</span>
+<span class="fc" id="L160">				CustomerPersonalDetailsValidation.ValidateAge(customerPersonalRequest.getAge(),</span>
+<span class="fc" id="L161">						CustomerManagementConstants.ageLength);</span>
+<span class="fc" id="L162">				CustomerPersonalDetailsValidation.ValidateGender(customerPersonalRequest.getGender(),</span>
+<span class="fc" id="L163">						CustomerManagementConstants.genderLength);</span>
+<span class="fc" id="L164">				CustomerPersonalDetailsValidation.ValidateCustomerEmailId(customerPersonalRequest.getCustomerEmailId(),</span>
+<span class="fc" id="L165">						CustomerManagementConstants.customerEmailIdLength);</span>
+<span class="fc" id="L166">				CustomerPersonalDetailsValidation.ValidateAlternativeEmailId(</span>
+<span class="fc" id="L167">						customerPersonalRequest.getAlternativeEmailId(),</span>
+<span class="fc" id="L168">						CustomerManagementConstants.alternativeEmailIdLength);</span>
+<span class="fc" id="L169">				CustomerPersonalDetailsValidation.ValidateCustomeMobileNumber(</span>
+<span class="fc" id="L170">						customerPersonalRequest.getCustomerMobileNumber(),</span>
+<span class="fc" id="L171">						CustomerManagementConstants.customerMobileNumberLength);</span>
+<span class="fc" id="L172">				CustomerPersonalDetailsValidation.ValidateAlternativeMobileNumber(</span>
+<span class="fc" id="L173">						customerPersonalRequest.getAlternativeMobileNumber(),</span>
+<span class="fc" id="L174">						CustomerManagementConstants.alternativeMobileNumberLength);</span>
+<span class="fc" id="L175">				CustomerPersonalDetailsValidation.ValidateCustomerLandlineNumber(</span>
+<span class="fc" id="L176">						customerPersonalRequest.getCustomerLandlineNumber(),</span>
+<span class="fc" id="L177">						CustomerManagementConstants.customerLandlineNumberLength);</span>
+
+<span class="fc" id="L179">			}</span>
+		}
+<span class="fc" id="L181">	}</span>
+
+	private void validateAddressDetails(CustomerManagementServiceRequest customerManagementDetails)
+			throws InvalidInputParametersException {
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">		if (customerManagementDetails.getAddressRequestList() != null) {</span>
+
+<span class="fc bfc" id="L187" title="All 2 branches covered.">			for (AddressRequest addressRequest : customerManagementDetails.getAddressRequestList()) {</span>
+
+<span class="fc" id="L189">				AddressDetailsValidation.ValidateAddressLine1(addressRequest.getAddressLine1(),</span>
+<span class="fc" id="L190">						CustomerManagementConstants.addresLine1length);</span>
+<span class="fc" id="L191">				AddressDetailsValidation.ValidateCity(addressRequest.getCity(), CustomerManagementConstants.cityLength);</span>
+<span class="fc" id="L192">				AddressDetailsValidation.ValidateLandmark(addressRequest.getLandmark(),</span>
+<span class="fc" id="L193">						CustomerManagementConstants.landMarkLength);</span>
+<span class="fc" id="L194">				AddressDetailsValidation.ValidateState(addressRequest.getState(),</span>
+<span class="fc" id="L195">						CustomerManagementConstants.stateLength);</span>
+<span class="fc" id="L196">				AddressDetailsValidation.ValidateCountry(addressRequest.getCountry(),</span>
+<span class="fc" id="L197">						CustomerManagementConstants.countryLength);</span>
+<span class="fc" id="L198">				AddressDetailsValidation.ValidateZipCode(addressRequest.getZipCode(),</span>
+<span class="fc" id="L199">						CustomerManagementConstants.zipCodeLength);</span>
+<span class="fc" id="L200">				AddressDetailsValidation.ValidateAddressLine2(addressRequest.getZipCode(),</span>
+<span class="fc" id="L201">						CustomerManagementConstants.addresLine2length);</span>
+<span class="fc" id="L202">				AddressDetailsValidation.ValidateEmailId(addressRequest.getZipCode(),</span>
+<span class="fc" id="L203">						CustomerManagementConstants.emailIdLength);</span>
+<span class="fc" id="L204">				AddressDetailsValidation.ValidateMobileNumber(addressRequest.getMobileNumber(),</span>
+<span class="fc" id="L205">						CustomerManagementConstants.mobilenumberLength);</span>
+<span class="fc" id="L206">				AddressDetailsValidation.ValidateLandLineNumber(addressRequest.getLandlineNumber(),</span>
+<span class="fc" id="L207">						CustomerManagementConstants.landlineNumberLength);</span>
+<span class="fc" id="L208">			}</span>
+		}
+<span class="fc" id="L210">	}</span>
+
+	private void validateCustomerBasicDetails(CustomerManagementServiceRequest customerManagementDetails)
+			throws InvalidInputParametersException {
+<span class="fc bfc" id="L214" title="All 2 branches covered.">		if (customerManagementDetails.getCustomerBasicDetailsRequest() != null) {</span>
+
+<span class="fc" id="L216">			CustomerBasicDetailsValidation.ValidateUserId(</span>
+<span class="fc" id="L217">					customerManagementDetails.getCustomerBasicDetailsRequest().getUserId(),</span>
+<span class="fc" id="L218">					CustomerManagementConstants.userIdlength);</span>
+<span class="fc" id="L219">			CustomerBasicDetailsValidation.ValidateApplicationId(</span>
+<span class="fc" id="L220">					customerManagementDetails.getCustomerBasicDetailsRequest().getApplicationId(),</span>
+<span class="fc" id="L221">					CustomerManagementConstants.applicationIdlength);</span>
+<span class="fc" id="L222">			CustomerBasicDetailsValidation.ValidateTenantId(</span>
+<span class="fc" id="L223">					customerManagementDetails.getCustomerBasicDetailsRequest().getTenantId(),</span>
+<span class="fc" id="L224">					CustomerManagementConstants.tenantIdlength);</span>
+<span class="fc" id="L225">			CustomerBasicDetailsValidation.ValidatePassword(</span>
+<span class="fc" id="L226">					customerManagementDetails.getCustomerBasicDetailsRequest().getPassword(),</span>
+<span class="fc" id="L227">					CustomerManagementConstants.passwordlength);</span>
+<span class="fc" id="L228">			CustomerBasicDetailsValidation.ValidateCustomerEmail(</span>
+<span class="fc" id="L229">					customerManagementDetails.getCustomerBasicDetailsRequest().getEmailId(),</span>
+<span class="fc" id="L230">					CustomerManagementConstants.customerEmailLength);</span>
+<span class="fc" id="L231">			CustomerBasicDetailsValidation.ValidateUsername(</span>
+<span class="fc" id="L232">					customerManagementDetails.getCustomerBasicDetailsRequest().getUserName(),</span>
+<span class="fc" id="L233">					CustomerManagementConstants.userNameLength);</span>
+		}
+<span class="fc" id="L235">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
