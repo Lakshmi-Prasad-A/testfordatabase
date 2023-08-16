@@ -368,21 +368,21 @@ import com.insignia.serviceInterface.CustomerServiceInterface;
 <span class="fc" id="L368">		CustomerManagementServiceResponse customerManagementServiceResponse = new CustomerManagementServiceResponse();</span>
 
 <span class="fc" id="L370">		customerManagementServiceResponse.setSuccessMessage(&quot;Successfully saved data&quot;);</span>
-
+		
 		// AddressResponse//
-<span class="pc bpc" id="L373" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null &amp;&amp; customerBasicDetailsEntity.getAddressDetails()!=null&amp;&amp;!customerBasicDetailsEntity.getAddressDetails().isEmpty())</span>
-<span class="nc" id="L374">			customerManagementServiceResponse.setAddressResponseList(</span>
-<span class="nc" id="L375">					createAddressDetailsResponseForEntity(customerBasicDetailsEntity.getAddressDetails()));</span>
+<span class="pc bpc" id="L373" title="1 of 6 branches missed.">		if (customerBasicDetailsEntity!=null &amp;&amp; customerBasicDetailsEntity.getAddressDetails()!=null&amp;&amp;!customerBasicDetailsEntity.getAddressDetails().isEmpty())</span>
+<span class="fc" id="L374">			customerManagementServiceResponse.setAddressResponseList(</span>
+<span class="fc" id="L375">					createAddressDetailsResponseForEntity(customerBasicDetailsEntity.getAddressDetails()));</span>
 
 		// CustomerPersonalDetailsResponse//
-<span class="pc bpc" id="L378" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getCustomerPersonalDetails()!=null &amp;&amp; !customerBasicDetailsEntity.getCustomerPersonalDetails().isEmpty())</span>
-<span class="nc" id="L379">			customerManagementServiceResponse</span>
-<span class="nc" id="L380">					.setCustomerPersonalDetailsResponseList(createCustomerPersonalDetailsResponseForEntity(</span>
-<span class="nc" id="L381">							customerBasicDetailsEntity.getCustomerPersonalDetails()));</span>
+<span class="pc bpc" id="L378" title="1 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getCustomerPersonalDetails()!=null &amp;&amp; !customerBasicDetailsEntity.getCustomerPersonalDetails().isEmpty())</span>
+<span class="fc" id="L379">			customerManagementServiceResponse</span>
+<span class="fc" id="L380">					.setCustomerPersonalDetailsResponseList(createCustomerPersonalDetailsResponseForEntity(</span>
+<span class="fc" id="L381">							customerBasicDetailsEntity.getCustomerPersonalDetails()));</span>
 
-<span class="pc bpc" id="L383" title="2 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getRolesAndPermissions()!=null &amp;&amp; !customerBasicDetailsEntity.getRolesAndPermissions().isEmpty())</span>
-<span class="nc" id="L384">			customerManagementServiceResponse.setRolesAndPermissionsResponseList(</span>
-<span class="nc" id="L385">					createRolesAndPermissionsResponseForEntity(customerBasicDetailsEntity.getRolesAndPermissions()));</span>
+<span class="pc bpc" id="L383" title="1 of 6 branches missed.">		if (customerBasicDetailsEntity!=null&amp;&amp;customerBasicDetailsEntity.getRolesAndPermissions()!=null &amp;&amp; !customerBasicDetailsEntity.getRolesAndPermissions().isEmpty())</span>
+<span class="fc" id="L384">			customerManagementServiceResponse.setRolesAndPermissionsResponseList(</span>
+<span class="fc" id="L385">					createRolesAndPermissionsResponseForEntity(customerBasicDetailsEntity.getRolesAndPermissions()));</span>
 
 <span class="fc" id="L387">		return customerManagementServiceResponse;</span>
 	}
@@ -392,23 +392,23 @@ import com.insignia.serviceInterface.CustomerServiceInterface;
 
 <span class="fc" id="L393">		List&lt;RolesAndPermissionsResponse&gt; rolesAndPermissionsResponseList = new ArrayList&lt;&gt;();</span>
 
-<span class="pc bpc" id="L395" title="1 of 2 branches missed.">		for (RolesAndPermissions rolesAndPermissionsList : rolesAndPermissions) {</span>
+<span class="fc bfc" id="L395" title="All 2 branches covered.">		for (RolesAndPermissions rolesAndPermissionsList : rolesAndPermissions) {</span>
 
-<span class="nc" id="L397">			RolesAndPermissionsResponse rolesAndPermissionsResponse = new RolesAndPermissionsResponse();</span>
+<span class="fc" id="L397">			RolesAndPermissionsResponse rolesAndPermissionsResponse = new RolesAndPermissionsResponse();</span>
 
-<span class="nc" id="L399">			rolesAndPermissionsResponse.setRoleId(rolesAndPermissionsList.getRoleId());</span>
-<span class="nc" id="L400">			rolesAndPermissionsResponse.setRoleName(rolesAndPermissionsList.getRoleName());</span>
-<span class="nc" id="L401">			rolesAndPermissionsResponse.setPermission1(rolesAndPermissionsList.getPermission1());</span>
-<span class="nc" id="L402">			rolesAndPermissionsResponse.setPermission2(rolesAndPermissionsList.getPermission2());</span>
-<span class="nc" id="L403">			rolesAndPermissionsResponse.setPermission3(rolesAndPermissionsList.getPermission3());</span>
-<span class="nc" id="L404">			rolesAndPermissionsResponse.setPermission4(rolesAndPermissionsList.getPermission4());</span>
-<span class="nc" id="L405">			rolesAndPermissionsResponse.setRoleApprovedDate(rolesAndPermissionsList.getRoleApprovedDate());</span>
-<span class="nc" id="L406">			rolesAndPermissionsResponse.setRoleRevokedDate(rolesAndPermissionsList.getRoleRevokedDate());</span>
-<span class="nc" id="L407">			rolesAndPermissionsResponse.setPermissionChangeDate(rolesAndPermissionsList.getPermissionChangeDate());</span>
-<span class="nc" id="L408">			rolesAndPermissionsResponse.setUpdatedPermissions(rolesAndPermissionsList.getUpdatedPermissions());</span>
+<span class="fc" id="L399">			rolesAndPermissionsResponse.setRoleId(rolesAndPermissionsList.getRoleId());</span>
+<span class="fc" id="L400">			rolesAndPermissionsResponse.setRoleName(rolesAndPermissionsList.getRoleName());</span>
+<span class="fc" id="L401">			rolesAndPermissionsResponse.setPermission1(rolesAndPermissionsList.getPermission1());</span>
+<span class="fc" id="L402">			rolesAndPermissionsResponse.setPermission2(rolesAndPermissionsList.getPermission2());</span>
+<span class="fc" id="L403">			rolesAndPermissionsResponse.setPermission3(rolesAndPermissionsList.getPermission3());</span>
+<span class="fc" id="L404">			rolesAndPermissionsResponse.setPermission4(rolesAndPermissionsList.getPermission4());</span>
+<span class="fc" id="L405">			rolesAndPermissionsResponse.setRoleApprovedDate(rolesAndPermissionsList.getRoleApprovedDate());</span>
+<span class="fc" id="L406">			rolesAndPermissionsResponse.setRoleRevokedDate(rolesAndPermissionsList.getRoleRevokedDate());</span>
+<span class="fc" id="L407">			rolesAndPermissionsResponse.setPermissionChangeDate(rolesAndPermissionsList.getPermissionChangeDate());</span>
+<span class="fc" id="L408">			rolesAndPermissionsResponse.setUpdatedPermissions(rolesAndPermissionsList.getUpdatedPermissions());</span>
 
-<span class="nc" id="L410">			rolesAndPermissionsResponseList.add(rolesAndPermissionsResponse);</span>
-<span class="nc" id="L411">		}</span>
+<span class="fc" id="L410">			rolesAndPermissionsResponseList.add(rolesAndPermissionsResponse);</span>
+<span class="fc" id="L411">		}</span>
 <span class="fc" id="L412">		return rolesAndPermissionsResponseList;</span>
 	}
 
@@ -416,27 +416,27 @@ import com.insignia.serviceInterface.CustomerServiceInterface;
 			List&lt;CustomerPersonalDetails&gt; customerPersonalDetails) {
 <span class="fc" id="L417">		List&lt;CustomerPersonalDetailsResponse&gt; customerPersonalDetailsResponseList = new ArrayList&lt;&gt;();</span>
 
-<span class="pc bpc" id="L419" title="1 of 2 branches missed.">		for (CustomerPersonalDetails customerPersonalDetailsList : customerPersonalDetails) {</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">		for (CustomerPersonalDetails customerPersonalDetailsList : customerPersonalDetails) {</span>
 
-<span class="nc" id="L421">			CustomerPersonalDetailsResponse customerPersonalDetailsResponse = new CustomerPersonalDetailsResponse();</span>
+<span class="fc" id="L421">			CustomerPersonalDetailsResponse customerPersonalDetailsResponse = new CustomerPersonalDetailsResponse();</span>
 
-<span class="nc" id="L423">			customerPersonalDetailsResponse.setSequenceNumber(customerPersonalDetailsList.getSequenceNumber());</span>
-<span class="nc" id="L424">			customerPersonalDetailsResponse.setFirstName(customerPersonalDetailsList.getFirstName());</span>
-<span class="nc" id="L425">			customerPersonalDetailsResponse.setLastName(customerPersonalDetailsList.getLastName());</span>
-<span class="nc" id="L426">			customerPersonalDetailsResponse.setMiddleName(customerPersonalDetailsList.getMiddleName());</span>
-<span class="nc" id="L427">			customerPersonalDetailsResponse.setAge(customerPersonalDetailsList.getAge());</span>
-<span class="nc" id="L428">			customerPersonalDetailsResponse.setGender(customerPersonalDetailsList.getGender());</span>
-<span class="nc" id="L429">			customerPersonalDetailsResponse.setCustomerEmailId(customerPersonalDetailsList.getCustomerEmailId());</span>
-<span class="nc" id="L430">			customerPersonalDetailsResponse.setAlternativeEmailId(customerPersonalDetailsList.getAlternativeEmailId());</span>
-<span class="nc" id="L431">			customerPersonalDetailsResponse</span>
-<span class="nc" id="L432">					.setCustomerMobileNumber(customerPersonalDetailsList.getCustomerMobileNumber());</span>
-<span class="nc" id="L433">			customerPersonalDetailsResponse</span>
-<span class="nc" id="L434">					.setAlternativeMobileNumber(customerPersonalDetailsList.getAlternativeMobileNumber());</span>
-<span class="nc" id="L435">			customerPersonalDetailsResponse</span>
-<span class="nc" id="L436">					.setCustomerLandlineNumber(customerPersonalDetailsList.getCustomerLandlineNumber());</span>
+<span class="fc" id="L423">			customerPersonalDetailsResponse.setSequenceNumber(customerPersonalDetailsList.getSequenceNumber());</span>
+<span class="fc" id="L424">			customerPersonalDetailsResponse.setFirstName(customerPersonalDetailsList.getFirstName());</span>
+<span class="fc" id="L425">			customerPersonalDetailsResponse.setLastName(customerPersonalDetailsList.getLastName());</span>
+<span class="fc" id="L426">			customerPersonalDetailsResponse.setMiddleName(customerPersonalDetailsList.getMiddleName());</span>
+<span class="fc" id="L427">			customerPersonalDetailsResponse.setAge(customerPersonalDetailsList.getAge());</span>
+<span class="fc" id="L428">			customerPersonalDetailsResponse.setGender(customerPersonalDetailsList.getGender());</span>
+<span class="fc" id="L429">			customerPersonalDetailsResponse.setCustomerEmailId(customerPersonalDetailsList.getCustomerEmailId());</span>
+<span class="fc" id="L430">			customerPersonalDetailsResponse.setAlternativeEmailId(customerPersonalDetailsList.getAlternativeEmailId());</span>
+<span class="fc" id="L431">			customerPersonalDetailsResponse</span>
+<span class="fc" id="L432">					.setCustomerMobileNumber(customerPersonalDetailsList.getCustomerMobileNumber());</span>
+<span class="fc" id="L433">			customerPersonalDetailsResponse</span>
+<span class="fc" id="L434">					.setAlternativeMobileNumber(customerPersonalDetailsList.getAlternativeMobileNumber());</span>
+<span class="fc" id="L435">			customerPersonalDetailsResponse</span>
+<span class="fc" id="L436">					.setCustomerLandlineNumber(customerPersonalDetailsList.getCustomerLandlineNumber());</span>
 
-<span class="nc" id="L438">			customerPersonalDetailsResponseList.add(customerPersonalDetailsResponse);</span>
-<span class="nc" id="L439">		}</span>
+<span class="fc" id="L438">			customerPersonalDetailsResponseList.add(customerPersonalDetailsResponse);</span>
+<span class="fc" id="L439">		}</span>
 <span class="fc" id="L440">		return customerPersonalDetailsResponseList;</span>
 
 	}
@@ -444,24 +444,24 @@ import com.insignia.serviceInterface.CustomerServiceInterface;
 	private List&lt;AddressResponse&gt; createAddressDetailsResponseForEntity(List&lt;AddressDetails&gt; addressDetailsList) {
 <span class="fc" id="L445">		List&lt;AddressResponse&gt; addressResponseList = new ArrayList&lt;&gt;();</span>
 
-<span class="pc bpc" id="L447" title="1 of 2 branches missed.">		for (AddressDetails addressDetails : addressDetailsList) {</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">		for (AddressDetails addressDetails : addressDetailsList) {</span>
 
-<span class="nc" id="L449">			AddressResponse addressResponse = new AddressResponse();</span>
+<span class="fc" id="L449">			AddressResponse addressResponse = new AddressResponse();</span>
 
-<span class="nc" id="L451">			addressResponse.setSequenceNumber(addressDetails.getSequenceNumber());</span>
-<span class="nc" id="L452">			addressResponse.setAddressLine1(addressDetails.getAddressLine1());</span>
-<span class="nc" id="L453">			addressResponse.setAddressLine2(addressDetails.getAddressLine2());</span>
-<span class="nc" id="L454">			addressResponse.setLandmark(addressDetails.getLandmark());</span>
-<span class="nc" id="L455">			addressResponse.setCity(addressDetails.getCity());</span>
-<span class="nc" id="L456">			addressResponse.setState(addressDetails.getState());</span>
-<span class="nc" id="L457">			addressResponse.setCountry(addressDetails.getCountry());</span>
-<span class="nc" id="L458">			addressResponse.setZipCode(addressDetails.getZipCode());</span>
-<span class="nc" id="L459">			addressResponse.setMobileNumber(addressDetails.getMobileNumber());</span>
-<span class="nc" id="L460">			addressResponse.setLandlineNumber(addressDetails.getLandlineNumber());</span>
-<span class="nc" id="L461">			addressResponse.setEmailId(addressDetails.getEmailId());</span>
+<span class="fc" id="L451">			addressResponse.setSequenceNumber(addressDetails.getSequenceNumber());</span>
+<span class="fc" id="L452">			addressResponse.setAddressLine1(addressDetails.getAddressLine1());</span>
+<span class="fc" id="L453">			addressResponse.setAddressLine2(addressDetails.getAddressLine2());</span>
+<span class="fc" id="L454">			addressResponse.setLandmark(addressDetails.getLandmark());</span>
+<span class="fc" id="L455">			addressResponse.setCity(addressDetails.getCity());</span>
+<span class="fc" id="L456">			addressResponse.setState(addressDetails.getState());</span>
+<span class="fc" id="L457">			addressResponse.setCountry(addressDetails.getCountry());</span>
+<span class="fc" id="L458">			addressResponse.setZipCode(addressDetails.getZipCode());</span>
+<span class="fc" id="L459">			addressResponse.setMobileNumber(addressDetails.getMobileNumber());</span>
+<span class="fc" id="L460">			addressResponse.setLandlineNumber(addressDetails.getLandlineNumber());</span>
+<span class="fc" id="L461">			addressResponse.setEmailId(addressDetails.getEmailId());</span>
 
-<span class="nc" id="L463">			addressResponseList.add(addressResponse);</span>
-<span class="nc" id="L464">		}</span>
+<span class="fc" id="L463">			addressResponseList.add(addressResponse);</span>
+<span class="fc" id="L464">		}</span>
 
 <span class="fc" id="L466">		return addressResponseList;</span>
 	}

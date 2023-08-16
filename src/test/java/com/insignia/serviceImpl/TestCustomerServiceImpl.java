@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,11 +51,9 @@ public class TestCustomerServiceImpl {
 	private CustomerDaoInterface customerRepo;
 	@Mock
 	private CustomerBasicDetailsRepository customerBasicDetailsRepo;
-	
+
 	@InjectMocks
 	private CustomerManagementServiceResponse customerManagementService;
-	
-	
 
 	CustomerManagementServiceRequest customerManagementServiceRequest = new CustomerManagementServiceRequest();
 	CustomerManagementServiceResponse customerManagementServiceResponse = new CustomerManagementServiceResponse();
@@ -72,12 +68,10 @@ public class TestCustomerServiceImpl {
 	CustomerPersonalDetailsResponse customerPersonalDetailsResponse = new CustomerPersonalDetailsResponse();
 	RolesAndPermissionsRequest rolesAndPermissionsRequest = new RolesAndPermissionsRequest();
 	RolesAndPermissionsResponse rolesAndPermissionsResponse = new RolesAndPermissionsResponse();
-	CustomerBasicDetailsEntity initializeCustmerDetailsEntity=new CustomerBasicDetailsEntity();
-	
+	CustomerBasicDetailsEntity initializeCustmerDetailsEntity = new CustomerBasicDetailsEntity();
+
 	public void dataInitilization() {
 
-		
-		
 		customerBasicDetailsRequest.setApplicationId("112");
 		customerBasicDetailsRequest.setTenantId("1124");
 		customerBasicDetailsRequest.setUserId("2545");
@@ -87,9 +81,9 @@ public class TestCustomerServiceImpl {
 		customerBasicDetailsRequest.setUserName("Lakshmi");
 
 		customerManagementServiceRequest.setCustomerBasicDetailsRequest(customerBasicDetailsRequest);
-		
+
 		List<RolesAndPermissionsRequest> rolesAndPermissionsList = new ArrayList<>();
-		
+
 		rolesAndPermissionsRequest.setRoleId(5);
 		rolesAndPermissionsRequest.setCustomerSequenceNumber(8L);
 		rolesAndPermissionsRequest.setPermission1(null);
@@ -103,12 +97,11 @@ public class TestCustomerServiceImpl {
 		rolesAndPermissionsRequest.setUpdatedPermissions("yes");
 
 		rolesAndPermissionsList.add(rolesAndPermissionsRequest);
-		
+
 		customerManagementServiceRequest.setRolesAndPermissionsRequestList(rolesAndPermissionsList);
 
-		
 		List<CustomerPersonalDetailsRequest> customerPersonalDetailsRequestList = new ArrayList<>();
-		
+
 		customerPersonalDetailsRequest.setCustomerSequenceNumber(8L);
 		customerPersonalDetailsRequest.setSequenceNumber(5);
 		customerPersonalDetailsRequest.setFirstName("lakshmi");
@@ -122,14 +115,12 @@ public class TestCustomerServiceImpl {
 		customerPersonalDetailsRequest.setAlternativeEmailId("sidharthlakshmi4@gmail.com");
 		customerPersonalDetailsRequest.setCustomerLandlineNumber("8765987");
 
-		
 		customerPersonalDetailsRequestList.add(customerPersonalDetailsRequest);
-		
+
 		customerManagementServiceRequest.setCustomerPersonalDetailsRequestList(customerPersonalDetailsRequestList);
 
-		
 		List<AddressRequest> addressRequestList = new ArrayList<>();
-		
+
 		addressRequest.setCustomerSequenceNumber(8L);
 		addressRequest.setSequenceNumber(8);
 		addressRequest.setAddressLine1("VinayakaTemple");
@@ -144,13 +135,13 @@ public class TestCustomerServiceImpl {
 		addressRequest.setLandlineNumber("98765895");
 		addressRequest.setisBillingAddress(false);
 		addressRequest.setIsDefaultAddress(false);
-		
+
 		addressRequestList.add(addressRequest);
-		
+
 		customerManagementServiceRequest.setAddressRequestList(addressRequestList);
 
 		List<RolesAndPermissionsResponse> rolesAndPermissionsResponseList = new ArrayList<>();
-		
+
 		rolesAndPermissionsResponse.setPermission1(null);
 		rolesAndPermissionsResponse.setPermission2(null);
 		rolesAndPermissionsResponse.setPermission3(null);
@@ -162,12 +153,11 @@ public class TestCustomerServiceImpl {
 		rolesAndPermissionsResponse.setUpdatedPermissions("yes");
 
 		rolesAndPermissionsResponseList.add(rolesAndPermissionsResponse);
-		
+
 		customerManagementServiceResponse.setRolesAndPermissionsResponseList(rolesAndPermissionsResponseList);
 
-		
 		List<AddressResponse> addressResponseList = new ArrayList<>();
-		
+
 		addressRes.setAddressLine1("VinayakaTemple");
 		addressRes.setAddressLine2("CinemaRoad");
 		addressRes.setLandmark("Opp:ApolloHospital");
@@ -182,11 +172,11 @@ public class TestCustomerServiceImpl {
 		addressRes.setDefaultAddress(false);
 
 		addressResponseList.add(addressRes);
-		
+
 		customerManagementServiceResponse.setAddressResponseList(addressResponseList);
 
 		List<CustomerPersonalDetailsResponse> customerPersonalDetailsResponseList = new ArrayList<>();
-		
+
 		customerPersonalDetailsResponse.setFirstName("lakshmi");
 		customerPersonalDetailsResponse.setLastName("Pragallapati");
 		customerPersonalDetailsResponse.setMiddleName("Nagu");
@@ -200,16 +190,13 @@ public class TestCustomerServiceImpl {
 
 		customerPersonalDetailsResponseList.add(customerPersonalDetailsResponse);
 		customerManagementServiceResponse.setCustomerPersonalDetailsResponseList(customerPersonalDetailsResponseList);
-		
-		
+
 	}
-	
+
 	public CustomerBasicDetailsEntity getDetailsEntity() {
-		
-		
-		AddressDetails addressDetails=new AddressDetails();
-	
-		
+
+		AddressDetails addressDetails = new AddressDetails();
+
 		addressDetails.setSequenceNumber(8);
 		addressDetails.setAddressLine1("VinayakaTemple");
 		addressDetails.setAddressLine2("CinemaRoad");
@@ -223,10 +210,9 @@ public class TestCustomerServiceImpl {
 		addressDetails.setLandlineNumber("98765895");
 		addressDetails.setBillingAddress(false);
 		addressDetails.setDefaultAddress(false);
-		
-		
+
 		RolesAndPermissions rolesAndPermissions = new RolesAndPermissions();
-		
+
 		rolesAndPermissions.setRoleId(5);
 		rolesAndPermissions.setPermission1(null);
 		rolesAndPermissions.setPermission2(null);
@@ -237,9 +223,9 @@ public class TestCustomerServiceImpl {
 		rolesAndPermissions.setRoleName("admin");
 		rolesAndPermissions.setRoleRevokedDate(null);
 		rolesAndPermissions.setUpdatedPermissions("yes");
-		
+
 		CustomerPersonalDetails customerPersonalDetails = new CustomerPersonalDetails();
-				
+
 		customerPersonalDetails.setSequenceNumber(8);
 		customerPersonalDetails.setSequenceNumber(5);
 		customerPersonalDetails.setFirstName("lakshmi");
@@ -252,122 +238,107 @@ public class TestCustomerServiceImpl {
 		customerPersonalDetails.setCustomerEmailId("lakshmisidarth4@gmail.com");
 		customerPersonalDetails.setAlternativeEmailId("sidharthlakshmi4@gmail.com");
 		customerPersonalDetails.setCustomerLandlineNumber("8765987");
-		
+
 		initializeCustmerDetailsEntity.setAddressDetails(Arrays.asList(addressDetails));
 		initializeCustmerDetailsEntity.setRolesAndPermissions(Arrays.asList(rolesAndPermissions));
 		initializeCustmerDetailsEntity.setCustomerPersonalDetails(Arrays.asList(customerPersonalDetails));
 		initializeCustmerDetailsEntity.setCustomerSequenceNumber(8l);
-		
-		
+
 		return initializeCustmerDetailsEntity;
 	}
-	
+
 	@Test
 	public void testUpdateAllCustomerDetails() throws Exception {
-	    
+
 		dataInitilization();
 		getDetailsEntity();
 		EntityManager entityManager = mock(EntityManager.class);
-		
-		
-		CustomerBasicDetailsEntity basicDetailsEntityResponse=customerBasicDetailsEntity;
+
+		CustomerBasicDetailsEntity basicDetailsEntityResponse = customerBasicDetailsEntity;
 		basicDetailsEntityResponse.setApplicationId("123l");
-	 
-	    
-	    when(customerRepo.getAllCustomerData(8l)).thenReturn(Optional.ofNullable(initializeCustmerDetailsEntity));
-	    
-	    when(customerRepo.isTokenNotValid(8l)).thenReturn(false);
-	  // when(entityManager.merge(customerBasicDetailsEntity)).thenReturn(customerBasicDetailsEntity);
-	   when(customerRepo.updateAllCustomerDetails(customerBasicDetailsEntity)).thenReturn(customerBasicDetailsEntity);
-		
-	  // customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest);
-	    assertNotNull(customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest));
+
+		when(customerRepo.getAllCustomerData(8l)).thenReturn(Optional.ofNullable(initializeCustmerDetailsEntity));
+
+		when(customerRepo.isTokenNotValid(8l)).thenReturn(false);
+		// when(entityManager.merge(customerBasicDetailsEntity)).thenReturn(customerBasicDetailsEntity);
+		// when(customerRepo.updateAllCustomerDetails(customerBasicDetailsEntity)).thenReturn(customerBasicDetailsEntity);
+
+		customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest);
+		assertNotNull(customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest));
 	}
-	
-	
-	
+
 	@Test
 	public void testSaveAllCustomerDetails() throws Exception {
-	    
+
 		dataInitilization();
-		
-	    CustomerBasicDetailsEntity cbde = new CustomerBasicDetailsEntity();
 
-	    when(customerRepo.saveAllCustomerDetails(any())).thenReturn(cbde);
+		CustomerBasicDetailsEntity cbde = new CustomerBasicDetailsEntity();
 
-	    assertNotNull(customerServiceImpl.saveAllCustomerDetails(customerManagementServiceRequest));
+		when(customerRepo.saveAllCustomerDetails(any())).thenReturn(cbde);
+
+		assertNotNull(customerServiceImpl.saveAllCustomerDetails(customerManagementServiceRequest));
 	}
-	
+
 	@Test
 	public void testGetAllCustomerData() throws Exception {
 
-		
-	    Long customerSequenceNumber = 123L;
+		Long customerSequenceNumber = 123L;
 
-	    CustomerBasicDetailsEntity customerBasicDetailsEntity = new CustomerBasicDetailsEntity(/* Set necessary properties */);
+		CustomerBasicDetailsEntity customerBasicDetailsEntity = new CustomerBasicDetailsEntity(/*
+																								 * Set necessary
+																								 * properties
+																								 */);
 
-	    Optional<CustomerBasicDetailsEntity> response3 = Optional.ofNullable(customerBasicDetailsEntity);
+		Optional<CustomerBasicDetailsEntity> response3 = Optional.ofNullable(customerBasicDetailsEntity);
 
-	    when(customerRepo.getAllCustomerData(customerSequenceNumber)).thenReturn(response3);
-	    Optional<CustomerManagementServiceResponse> responseOptional = customerServiceImpl.getAllCustomerData(customerSequenceNumber);
+		when(customerRepo.getAllCustomerData(customerSequenceNumber)).thenReturn(response3);
+		Optional<CustomerManagementServiceResponse> responseOptional = customerServiceImpl
+				.getAllCustomerData(customerSequenceNumber);
 
-	
-	    assertTrue(responseOptional.isPresent());
-	    
-	    CustomerManagementServiceResponse response = responseOptional.get();
-	    assertNotNull(response);
+		assertTrue(responseOptional.isPresent());
+
+		CustomerManagementServiceResponse response = responseOptional.get();
+		assertNotNull(response);
 	}
-	
+
 	@Test
-    public void testDeleteCustomerAssociatedDetails_Success() throws Exception {
-        Long customerSequenceNumber = 123L;
+	public void testDeleteCustomerAssociatedDetails_Success() throws Exception {
+		Long customerSequenceNumber = 123L;
 
-        
-        when(customerRepo.isTokenNotValid(customerSequenceNumber)).thenReturn(false);
+		when(customerRepo.isTokenNotValid(customerSequenceNumber)).thenReturn(false);
 
-        customerServiceImpl.deleteCustomerAssociatedDetails(customerSequenceNumber);
+		customerServiceImpl.deleteCustomerAssociatedDetails(customerSequenceNumber);
 
-       
-        verify(customerRepo, times(1)).deleteCustomerAssociatedDetails(customerSequenceNumber);
-    }
-	
+		verify(customerRepo, times(1)).deleteCustomerAssociatedDetails(customerSequenceNumber);
+	}
+
 	@Test
 	void testTokenExpiredException() {
 		Long customer_sequence_number = 8L;
 		dataInitilization();
-		
+
 		when(customerRepo.isTokenNotValid(customer_sequence_number)).thenReturn(true);
-		
-	assertThrows(TokenExpiredException.class, () -> {
-		customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest);
-	});
 
-	assertThrows(TokenExpiredException.class, () -> {
-		customerServiceImpl.deleteCustomerAssociatedDetails(customer_sequence_number);
-	});
-	assertThrows(TokenExpiredException.class, () -> {
-		customerServiceImpl.getAllCustomerData(customer_sequence_number);
-	});
+		assertThrows(TokenExpiredException.class, () -> {
+			customerServiceImpl.updateAllCustomerDetails(customerManagementServiceRequest);
+		});
+
+		assertThrows(TokenExpiredException.class, () -> {
+			customerServiceImpl.deleteCustomerAssociatedDetails(customer_sequence_number);
+		});
+		assertThrows(TokenExpiredException.class, () -> {
+			customerServiceImpl.getAllCustomerData(customer_sequence_number);
+		});
 	}
-	
+
 	@Test
-    public void testCreateResponse() throws Exception {
-        CustomerBasicDetailsEntity customerEntity = new CustomerBasicDetailsEntity();
-        // Set up customerEntity with desired properties
+	public void testCreateResponse() throws Exception {
 
-       // when(customerEntity.getAddressDetails()).thenReturn(new ArrayList<>());
-        // Set up similar mock behavior for other methods
+		getDetailsEntity();
+		Method method = CustomerServiceImpl.class.getDeclaredMethod("createResponse", CustomerBasicDetailsEntity.class);
+		method.setAccessible(true);
+		Object customerServiceResponceObject = method.invoke(customerServiceImpl,new Object[] { initializeCustmerDetailsEntity });
 
-        CustomerServiceImpl serviceImpl = spy(CustomerServiceImpl.class);
-        
-        doNothing().when(serviceImpl).createResponse
-        
-        
-       // CustomerManagementServiceResponse result = customerManagementService.createResponse(customerEntity);
-
-       // assertEquals("Successfully saved data", result.getSuccessMessage());
-        // Assert other properties in the result based on the mock setup
-    }
+		assertNotNull(customerServiceResponceObject);
+	}
 }
-
-

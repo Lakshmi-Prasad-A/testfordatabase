@@ -368,7 +368,7 @@ public class CustomerServiceImpl implements CustomerServiceInterface {
 		CustomerManagementServiceResponse customerManagementServiceResponse = new CustomerManagementServiceResponse();
 
 		customerManagementServiceResponse.setSuccessMessage("Successfully saved data");
-
+		
 		// AddressResponse//
 		if (customerBasicDetailsEntity!=null && customerBasicDetailsEntity.getAddressDetails()!=null&&!customerBasicDetailsEntity.getAddressDetails().isEmpty())
 			customerManagementServiceResponse.setAddressResponseList(
